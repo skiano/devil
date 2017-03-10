@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Greatest Trick The Devil Ever Pulled</title>
+  <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link href="https://fonts.googleapis.com/css?family=IM+Fell+English+SC" rel="stylesheet">
+
+  <style>
+    html {
+      background: #000;
+      color: #ff0044;
+    }
+
+    /* https://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    .wrapper {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      top: 0;
+    }
+
+    .well {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+      padding: 40px;
+    }
+
+    .main-text {
+    }
+
+    .main-text, .well input {
+      font-family: 'IM Fell English SC', serif;
+      text-transform: lowercase;
+      font-size: 45px;
+      letter-spacing: 0.1em;
+    }
+
+    .well input {
+      display: inline;
+      color: #ff0044;
+      width: auto;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .call-to-action span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="well">
+      <div id="input">
+        <!-- The Greatest trick the devil ever pulled<br/>was <span id="input">Panera</span> -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hasher/1.2.0/hasher.min.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+  <script type="text/javascript">
+    hasher.prependHash = '!';
+    hasher.init();
+
+    const app = new Vue({
+      el: '#input',
+      components: {
+        callToAction: {
+          name: 'call-to-action',
+          props: ['action'],
+          template: '<p class="call-to-action">No? <span @click="action()">Write your own</span></p>'
+        }
+      },
+      template: [
+        '<div>',
+          '<p class="main-text">',
+            '<span v-html="baseText"/> <input ref="input" :disabled="disabled" autofocus placeholder="..." v-model="input">',
+          '</p>',
+          '<call-to-action :action="edit"/>',
+        '</div>'
+      ].join(''),
+      data: function () {
+        return {
+          disabled: hasher.getHash() ? true : false,
+          input: hasher.getHash(),
+          baseText: 'The Greatest trick the devil ever pulled<br/>was' 
+        }
+      },
+      methods: {
+        edit: function () {
+          this.input = null;
+          this.disabled = false;
+
+          self = this;
+          setTimeout(function focus () {
+            self.$refs.input.focus()  
+          }, 10)
+        }
+      }
+    })
+
+    app.$watch('input', function (newVal, oldVal) {
+      hasher.setHash(newVal)
+    });
+
+    hasher.changed.add(function (newVal) {
+      if (newVal !== app.$data.input) {
+        app.$set(app.$data, 'input', newVal);
+      }
+    });
+  </script>
+
+
+  <!-- Load Facebook SDK for JavaScript -->
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+
+  <!-- Your share button code -->
+  <div class="fb-share-button" 
+    data-href="http://www.your-domain.com/your-page.html" 
+    data-layout="button_count">
+  </div>
+
+</body>
+</html>
