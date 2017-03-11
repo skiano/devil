@@ -11,6 +11,7 @@
     html {
       background: #000;
       color: #ff0044;
+      font-family: Georgia, serif;
     }
 
     /* https://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
@@ -23,44 +24,94 @@
 
     .wrapper {
       position: fixed;
-      bottom: 0;
+      bottom: 40px;
       right: 0;
       left: 0;
       top: 0;
     }
 
-    .well {
+    footer {
+      height: 50px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #160010;
+      border-top: 1px solid #331120;
+      line-height: 50px;
+      font-size: 13px;
+      text-align: center;
+      
+    }
+
+    footer a {
+      color: #553343;
+      text-decoration: none;
+    }
+
+    .centered {
       width: 100%;
       position: absolute;
       top: 50%;
       -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
       transform: translateY(-50%);
-      padding: 40px;
+      padding: 0 20%;
     }
 
     .main-text {
+      margin: 0 auto 20px;
+      cursor: default;
     }
 
     .main-text, .well input {
       font-family: 'IM Fell English SC', serif;
       text-transform: lowercase;
       font-size: 45px;
-      letter-spacing: 0.1em;
+      line-height: 40px;
+      letter-spacing: 0.06em;
     }
 
     .well input {
       display: inline;
       color: #00aaff;
-      width: auto;
+      width: 400px;
       background: none;
       border: none;
       outline: none;
+      height: 40px;
+    }
+
+    .well input:hover {
+      cursor: text;
+    }
+
+    .call-to-action {
+      line-height: 45px;
     }
 
     .call-to-action span {
+      display: inline-block;
+      color: #00aaff;
       text-decoration: underline;
       cursor: pointer;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .main-text, .well input {
+        font-size: 32px;
+        line-height: 28px;
+      }
+
+      .well input {
+        width: 200px;
+        height: 28px;
+      }
+
+      .centered {
+        padding: 0 15%;
+      }
     }
   </style>
 </head>
@@ -72,13 +123,16 @@
       </div>
     </div>
   </div>
+  <footer>
+    <a href="http://skiano.com" target="blank">By Greg Skiano</a>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hasher/1.2.0/hasher.min.js"></script>
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 
   <script type="text/javascript">
-    hasher.prependHash = '!';
+    // hasher.prependHash = '!';
     hasher.init();
 
     const app = new Vue({
@@ -91,25 +145,28 @@
         }
       },
       template: [
-        '<div>',
-          '<p class="main-text">',
-            '<span v-html="baseText"/> <input ref="input" :disabled="disabled" autofocus placeholder="..." v-model="input">',
+        '<div class="centered">',
+          '<p class="main-text" @click="enable()">',
+            '<span v-html="baseText"/> <input ref="input" placeholder="..." v-model="input">',
           '</p>',
           '<call-to-action :action="edit"/>',
         '</div>'
       ].join(''),
       data: function () {
         return {
-          disabled: hasher.getHash() ? true : false,
           input: hasher.getHash(),
           baseText: 'The Greatest trick<br/>the devil ever pulled<br/>was' 
         }
       },
       methods: {
+        enable: function () {
+          this.focus();
+        },
         edit: function () {
           this.input = null;
-          this.disabled = false;
-
+          this.focus();
+        },
+        focus: function () {
           self = this;
           setTimeout(function focus () {
             self.$refs.input.focus()  
