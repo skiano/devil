@@ -1,0 +1,19 @@
+{
+  "name": "devil",
+  "version": "1.0.0",
+  "description": "The greatest trick the devil ever pulled",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve src" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skiano/devil.git"
+  },
+  "author": "Greg Skiano",
+  "license": "MIT",
+  "homepage": "https://github.com/skiano/devil#readme",
+  "devDependencies": {
+    "serve": "^5.0.2"
+  }
+}
